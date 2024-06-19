@@ -1,8 +1,8 @@
+// Importamos las funciones necesarias desde firestore.js
 import { save, checkNameExists } from './firestore.js';
 
-document.getElementById('btnSave').addEventListener('click', async (e) => {
-    e.preventDefault();
-    
+// Función para validar el formulario y guardar los datos en Firestore
+const guardarRegistro = async () => {
     const nombre = document.getElementById('nombre').value;
     const run = document.getElementById('run').value;
     const edad = document.getElementById('edad').value;
@@ -15,12 +15,14 @@ document.getElementById('btnSave').addEventListener('click', async (e) => {
     const nameExists = await checkNameExists(nombre);
 
     if (nameExists) {
+        // Si el nombre ya existe, mostramos un mensaje de error con SweetAlert
         Swal.fire({
             icon: 'error',
             title: 'Error',
             text: 'El nombre ya está registrado.'
         });
     } else {
+        // Si el nombre no existe, creamos el objeto persona con los datos del formulario
         const persona = {
             run,
             nombre,
@@ -31,16 +33,23 @@ document.getElementById('btnSave').addEventListener('click', async (e) => {
             centro_salud
         };
 
+        // Guardamos los datos en Firestore llamando a la función save de firestore.js
         save(persona);
 
+        // Mostramos un mensaje de éxito con SweetAlert
         Swal.fire({
             icon: 'success',
             title: 'Éxito',
             text: 'Registro guardado correctamente.'
         });
 
-        // Limpiar el formulario después de guardar
+        // Limpiamos el formulario después de guardar
         document.querySelector('form').reset();
     }
-});
+};
 
+// Escuchamos el evento 'click' del botón Guardar
+document.getElementById('btnSave').addEventListener('click', async (e) => {
+    e.preventDefault(); // Prevenimos el comportamiento por defecto del formulario
+    await guardarRegistro();
+});
