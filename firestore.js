@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"
-import { addDoc, collection, deleteDoc, doc, getDoc, getFirestore, onSnapshot, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"
+import { addDoc, collection, deleteDoc, doc, getDoc, getFirestore, onSnapshot, updateDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"
 // TODO: Documentación
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -13,7 +13,7 @@ const firebaseConfig = {
     messagingSenderId: "436459590807",
     appId: "1:436459590807:web:549f5faeaef1381f1845d2",
     measurementId: "G-WZ9P85YQJD"
-  }
+}
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig)
@@ -49,3 +49,15 @@ export const update = (id, persona) => {
     // updateDoc es una función de firestore que permite modificar un documento
     updateDoc(doc(db, 'Vacunados', id), persona)
 }
+
+// Función para verificar si un nombre ya existe en la colección
+export const checkNameExists = async (nombre) => {
+    const querySnapshot = await getDocs(collection(db, 'Vacunados'));
+    let exists = false;
+    querySnapshot.forEach((doc) => {
+        if (doc.data().nombre === nombre) {
+            exists = true;
+        }
+    });
+    return exists;
+};
